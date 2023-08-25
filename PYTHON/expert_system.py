@@ -38,20 +38,60 @@ with open("data.dat") as datafile:
                     Q[COUNTER].append(data[:L])
                     R[COUNTER].append(data[L + 1 :])
 
-##### Start questioning user #####
-for counter in range(HYPOTHESES):
-    if POSSIBLE[counter] == 0:
-        continue
-    for I in range(EVIDENCE):
-        if A[counter][I] == "":
+while True:
+    ##### Start questioning user #####
+    for counter in range(HYPOTHESES):
+        if POSSIBLE[counter] == 0:
             continue
-        print()
-        print(f"What is {Q[counter][I]}?")
-        print("Possible replies are:")
-        for Q in range(HYPOTHESES):
-            if POSSIBLE[Q] == 1:
-                print(" " * 20, R[Q][I])
-        print("or '*' for don't care or '< x' or '> x' for ranges", end="")
-        A[counter][I] = input(": ")
-        ##### Look for other questions this might apply to: #####
-        for Q in range(HYPOTHESES):
+        for I in range(EVIDENCE):
+            if A[counter][I] == "":
+                continue
+            print()
+            print(f"What is {Q[counter][I]}?")
+            print("Possible replies are:")
+            for Q_idx in range(HYPOTHESES):
+                if POSSIBLE[Q_idx] == 1:
+                    print(" " * 20, R[Q_idx][I])
+            print("or '*' for don't care or '< x' or '> x' for ranges", end="")
+            A[counter][I] = input(": ")
+            ##### Look for other questions this might apply to: #####
+            for Q_idx in range(counter, HYPOTHESES):
+                for E_idx in range(EVIDENCE):
+                    if Q[Q_idx][E_idx] == Q[counter][I]:
+                        A[Q_idx][E_idx] = A[counter][I]
+            ##### Look for hypotheses that can be discounted due to this answer #####
+            for H_idx in range(HYPOTHESES):
+                for E_idx in range(EVIDENCE):
+                    POSS_idx = POSSIBLE[H_idx]
+                    sub_1500()
+                    if POSS_idx < POSSIBLE[H_idx]:
+                        print()
+                        print(N[H_idx], "is ruled out.")
+                        print("Whould you like to know why?")
+                        A_str = input("(Y/N)")
+                        if A_str.upper() == "Y":
+                            print()
+                    POSSIBLE[H_idx] = POSS_idx  # Result of test routine
+            P_idx = 0
+            for Q_idx in range(HYPOTHESES):
+                P_idx += POSSIBLE[Q_idx]
+            if P_idx == 0:
+                print("No possibilities left!")
+                I = EVIDENCE  # TODO: This will not work - the loop variable will not be updated
+                counter = HYPOTHESES  # TODO: This will not work - the loop variable will not be updated
+            ##### On to the next question #####
+        ##### Display any theories that match user's replies #####
+        if POSSIBLE[counter]:
+            print(f"{N[counter]} is possible.")
+            print("Whould you like to know why?")
+            A_str = input("(Y/N)")
+            if A_str.upper() == "Y":
+                sub_1200()
+        ##### Now try another theory #####
+    print()
+    print("Would you like another run?")
+    A_str = input("(Y/N)")
+    if A_str.upper() == "Y":
+        sub_1200()
+    if A_str.upper() == "N":
+        exit()
