@@ -9,15 +9,15 @@ print("EXPERT")
 print("------")
 
 
-HYPOTHESES : int = 100  # The number of different hypotheses
-EVIDENCE : int = 4      # The number of different items of evidence
+HYPOTHESES: int = 100  # The number of different hypotheses
+EVIDENCE: int = 4  # The number of different items of evidence
 
 # Set to True initially, and False when the hypothesis is ruled out
-POSSIBLE : list[bool] = [True] * HYPOTHESES  
-A : list[list] = []                          # Answer submitted by user
-Q : list[list] = []                          # Name of question
-R : list[list] = []                          # Correct reply
-N : list = []                                # Name of hypothesis
+POSSIBLE: list[bool] = [True] * HYPOTHESES
+A: list[list] = []  # Answer submitted by user
+Q: list[list] = []  # Name of question
+R: list[list] = []  # Correct reply
+N: list = []  # Name of hypothesis
 
 
 ##### Read knowledge base into above lists #####
@@ -32,7 +32,7 @@ with open("data.dat") as datafile:
             for J in range(len(data)):
                 if data[J] == " ":
                     L = J
+                    # TODO: Currently this will not work - the loop variable will not be updated
                     J = len(data)
                     Q[COUNTER].append(data[:L])
-                    R[COUNTER].append(data[L + 1:])
-    
+                    R[COUNTER].append(data[L + 1 :])
