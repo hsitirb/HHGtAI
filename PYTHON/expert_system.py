@@ -21,6 +21,7 @@ N: list = []  # Name of hypothesis
 
 
 ##### Read knowledge base into above lists #####
+# TODO: Put data statements into data.dat
 COUNTER = 0
 with open("data.dat") as datafile:
     # INPUT loop
@@ -36,3 +37,21 @@ with open("data.dat") as datafile:
                     J = len(data)
                     Q[COUNTER].append(data[:L])
                     R[COUNTER].append(data[L + 1 :])
+
+##### Start questioning user #####
+for counter in range(HYPOTHESES):
+    if POSSIBLE[counter] == 0:
+        continue
+    for I in range(EVIDENCE):
+        if A[counter][I] == "":
+            continue
+        print()
+        print(f"What is {Q[counter][I]}?")
+        print("Possible replies are:")
+        for Q in range(HYPOTHESES):
+            if POSSIBLE[Q] == 1:
+                print(" " * 20, R[Q][I])
+        print("or '*' for don't care or '< x' or '> x' for ranges", end="")
+        A[counter][I] = input(": ")
+        ##### Look for other questions this might apply to: #####
+        for Q in range(HYPOTHESES):
