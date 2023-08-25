@@ -30,7 +30,7 @@
 310 PRINT "(Possible replies are :"
 320 FOR Q%=1 TO HYPOTHESES%: IF POSSIBLE%(Q%)=1 THEN PRINT SPC(20);R$(Q%,I%)
 330 NEXT Q%
-340 PRINT "or '*' for don't-care of '< x' or '> x' for ranges.)"
+340 PRINT "or '*' for don't-care or '< x' or '> x' for ranges.)"
 350 INPUT A$(COUNTER%,I%)
 360 REM -- Look for other questions this might also apply to:
 370 FOR Q%=COUNTER%+1 TO HYPOTHESES%
