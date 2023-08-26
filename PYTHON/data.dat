@@ -1,0 +1,6 @@
+Model A, Price 200, Colour yes, RAM(K) 48, Discsize 0
+Model B, Price 300, Colour yes, RAM(K) 64, Discsize 120
+Model C, Price 100, Colour no, RAM(K) 48, Discsize 0
+Model D, Price 50, Colour no, RAM(K) 16, Discsize 0
+Model X, Price 399, Colour yes, RAM(K) 128, Discsize 180
+Model Y, Price 750, Colour no, RAM(K) 512, Discsize 360

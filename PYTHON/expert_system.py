@@ -4,6 +4,57 @@ Simple, deterministic, forward-chaining
 Expert System
 """
 
+
+def sub_1200():
+    """'How' routine"""
+    print()
+    print("It has :")
+    for Q_idx in range(EVIDENCE):
+        print(f"{Q[counter][Q_idx]} of {R[counter][Q_idx]}")
+
+
+def sub_1300():
+    """Re-initializing routing"""
+    for H_idx in range(HYPOTHESES):
+        for E_idx in range(EVIDENCE):
+            A[H_idx][E_idx] = ""
+        POSSIBLE[H_idx] = True
+
+
+def sub_1500():
+    """
+    Comparison routine (process of elimination)
+    Uses C_str, vr, va
+    """
+    global POSS_idx
+    # Already ruled out
+    if POSS_idx == 0:
+        return
+    # Wrong question
+    if Q[counter][I] != Q[H_idx][E_idx]:
+        return
+    # User doesn't care
+    if A[counter][I] == "*":
+        return
+    # Exact match
+    if A[counter][I] == R[H_idx][E_idx]:
+        return
+    C_str = A[counter][I][0]
+    # Failed exact match
+    if C_str != "<" and C_str != ">":
+        POSS_idx = 0
+        return
+    # Now try range tests
+    vr = int(R[H_idx][E_idx])  # numeric value
+    va = int(A[counter][I][2:])  # numeric input
+    # Allows user to say e.g. "<200" meaning under 200 etc.
+    if C_str == "<" and vr < va:
+        return
+    if C_str == ">" and vr > va:
+        return
+    POSS_idx = 0  # Failed all its chances
+
+
 ##### Inference Engine #####
 print("EXPERT")
 print("------")
@@ -21,15 +72,17 @@ N: list = []  # Name of hypothesis
 
 
 ##### Read knowledge base into above lists #####
-# TODO: Put data statements into data.dat
 COUNTER = 0
 with open("data.dat") as datafile:
     # INPUT loop
-    while (data := datafile.readline()) != "999":
+    for (
+        data
+    ) in (
+        datafile
+    ):  # TODO: This needs to be fixed. READ reads in comma-separated data items
         COUNTER += 1
         N.append(data)
         for _ in range(EVIDENCE):
-            data = datafile.readline()
             for J in range(len(data)):
                 if data[J] == " ":
                     L = J
