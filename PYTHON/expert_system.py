@@ -123,10 +123,32 @@ for Q_idx in range(COUNTER + 1, HYPOTHESES + 1):
 # 490 IF P%=0 THEN PRINT "No possibilites left!": I%=EVIDENCE%: COUNTER%=HYPOTHESES%
 # 500 NExT I%: REM on to next question
 
+##### Look for hypotheses that can be discounted due to this answer #####
+for H_idx in range(1, HYPOTHESES + 1):
+    for E_idx in range(1, EVIDENCE + 1):
+        # Test reply against question
+        POSS = POSSIBLE[H_idx]
+        sub_1500()
+        if POSS < POSSIBLE[H_idx]:
+            print()
+            print(N_str[H_idx], "is ruled out.")
+            print("Would you like to know why (Y/N)", end="")
+            A = input(": ")
+            if A == "y" or A == "Y":
+                print()
+            POSSIBLE[H_idx] = POSS
 
 # 510 REM -- Display any theories that match user's replies:
 # 520 IF POSSIBLE%(COUNTER%) THEN PRINT CHR$(7): PRINT N$(COUNTER%);" is possible.": PRINT "Would you like to know (Y/N)": INPUT A$: IF A$="y" OR A$="Y" THEN GOSUB 1200
 
+##### Display any theories that match user's replies #####
+if POSSIBLE[COUNTER]:
+    print("\a")
+    print(N_str[COUNTER], "is possible.")
+    print("Would you like to know (Y/N)", end="")
+    A = input(": ")
+    if A == "y" or A == "Y":
+        sub_1200()
 
 # 530 REM -- Now try another theory
 # 540 NEXT COUNTER%
