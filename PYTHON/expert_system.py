@@ -39,3 +39,36 @@ A_str: np.ndarray = np.empty(
 Q_str: np.ndarray = np.empty((HYPOTHESES, EVIDENCE), dtype=str)  # Name of question
 R_str: np.ndarray = np.empty((HYPOTHESES, EVIDENCE), dtype=str)  # Correct reply
 N_str: np.ndarray = np.empty(HYPOTHESES, dtype=str)  # Name of hypothesis
+
+# 160 REM -- Read knowledge base into above arrays
+# 170 RESTORE: COUNTER%=0
+# 180 READ A$: IF A$="999" THEN GOTO 250
+# 190 COUNTER%=COUNTER%+1: POSSIBLE%(COUNTER%)=1: N$(COUNTER%)=A$
+# 200 FOR I%=1 TO EVIDENCE%: READ A$
+# 210 FOR J%=1 to LEN(A$)
+# 220 IF MID$(A$,J%,1)=" " THEN L%=J%: J%=LEN(A$): Q$(COUNTER%, I%)=LEFT$(A$,L%): R$(COUNTER%,I%)=RIGHT$(A$,LEN(A$)-L%)
+# 230 NEXT J%
+# 240 NEXT I%: GOTO 180: REM input loop
+# 250 HYPOTHESES%=COUNTER%
+
+##### Read knowledge base into above arrays #####
+COUNTER: int = 0
+last_data = False
+with open("data.dat") as data_file:
+    for line in data_file:
+        data_line = iter(line.split(","))
+        data = next(data_line).strip()
+        if data == "999":
+            last_data = True
+            break
+        COUNTER = COUNTER + 1
+        POSSIBLE[COUNTER] = 1
+        N_str[COUNTER] = data
+        for I_idx in range(1, EVIDENCE + 1):
+            data = next(data_line).strip()
+            for J_idx in range(len(data)):
+                if data[J_idx] == " ":
+                    L_idx = J_idx
+                    Q_str[COUNTER, I_idx] = data[:L_idx]
+                    R_str[COUNTER, I_idx] = data[L_idx + 1 :]
+HYPOTHESES = COUNTER
