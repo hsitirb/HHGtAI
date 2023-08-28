@@ -169,3 +169,19 @@ while True:
     if A == "n" or A == "N":
         exit()
     # end of infinite loop
+
+
+# 1200 REM -- 'How' routine:
+# 1210 PRINT: PRINT "It has :"
+# 1220 FOR Q%=1 TO EVIDENCE%
+# 1230 PRINT Q$(COUNTER%,Q%);" of ";R$(COUNTER%,Q%)
+# 1240 NEXT Q%
+# 1250 RETURN
+
+
+def sub_1200():
+    """'How' routine"""
+    print()
+    print("It has :")
+    for Q_idx in range(1, EVIDENCE + 1):
+        print(Q_str[COUNTER, Q_idx], "of", R_str[COUNTER, Q_idx])
