@@ -10,6 +10,84 @@ Simple, Deterministic, Forward-Chaining
 EXPERT SYSTEM
 """
 
+# 1200 REM -- 'How' routine:
+# 1210 PRINT: PRINT "It has :"
+# 1220 FOR Q%=1 TO EVIDENCE%
+# 1230 PRINT Q$(COUNTER%,Q%);" of ";R$(COUNTER%,Q%)
+# 1240 NEXT Q%
+# 1250 RETURN
+
+
+def sub_1200():
+    """'How' routine"""
+    print()
+    print("It has :")
+    for Q_idx in range(1, EVIDENCE + 1):
+        print(Q_str[COUNTER, Q_idx], "of", R_str[COUNTER, Q_idx])
+
+
+# 1300 REM -- Re-initializing routine
+# 1310 FOR H%=1 TO HYPOTHESES%
+# 1320 FOR E%=1 TO EVIDENCE%
+# 1330 A$(H%,E%)="": NEXT E%
+# 1340 POSSIBLE%(H%)=1
+# 1350 NEXT H%
+# 1360 RETURN
+
+
+def sub_1300():
+    """Re-initializing routine"""
+    for H_idx in range(1, HYPOTHESES + 1):
+        for E_idx in range(1, EVIDENCE + 1):
+            A_str[H_idx, E_idx] = ""
+        POSSIBLE[H_idx] = 1
+
+
+# 1500 REM -- Comparison routine (process of elimination)
+# 1510 REM -- uses C$, vr, va
+# 1520 IF POSS% = 0 THEN RETURN : REM already ruled out
+# 1530 IF Q$(COUNTER%,I%) <> Q$(H%,E%) THEN RETURN : REM wrong question
+# 1540 IF A$(COUNTER%,I%)="*" THEN RETURN : REM user doesn't care
+# 1550 IF A$(COUNTER%,I%)=R$(H%,E%) THEN RETURN : REM exact match
+# 1560 C$=LEFT$(A$(COUNTER%,I%),1)
+# 1570 IF C$<>"<" AND C$<>">" THEN POSS%=0: RETURN : REM failed exact match
+# 1580 REM -- Now try range tests:
+# 1590 VR=VAL(R$(H%,E%)) : REM numeric value
+# 1600 VA=VAL(MID$(A$(COUNTER%,I%),2)) : REM numeric input
+# 1610 IF C$="<" AND VR < VA THEN RETURN
+# 1620 IF C$=">" AND VR > VA THEN RETURN
+# 1630 POSS%=0: REM failed all its chances!
+# 1640 RETURN
+# 1650 REM -- Allows user to say e.g. "<200" meaning under 200 etc.
+
+
+def sub_1500():
+    """Comparison routine (process of elimination)"""
+    global POSS
+    if POSS == 0:  # Already ruled out
+        return
+    if Q_str[COUNTER, I_idx] != Q_str[H_idx, E_idx]:  # Wrong question
+        return
+    if A_str[COUNTER, I_idx] == "*":  # User doesn't care
+        return
+    if A_str[COUNTER, I_idx] == R_str[H_idx, E_idx]:  # Exact match
+        return
+    C_str = A_str[COUNTER, I_idx][0]
+    if C_str != "<" and C_str != ">":
+        POSS = 0
+        return  # Failed exact match
+
+    ##### Now try range tests #####
+    VR = float(R_str[H_idx, E_idx])  # Numeric value
+    VA = float(A_str[COUNTER, I_idx][1:])  # Numeric input
+    if C_str == "<" and VR < VA:
+        return
+    if C_str == ">" and VR > VA:
+        return
+    POSS = 0  # Failed all its chances!
+    # Allows user to say e.g. "<200" meaning under 200 etc.
+
+
 # 70 REM -- Inference Engine:
 # 80 CLS: PRINT ,"EXPERT": PRINT ,"------"
 
@@ -169,81 +247,3 @@ while True:
     if A == "n" or A == "N":
         exit()
     # end of infinite loop
-
-
-# 1200 REM -- 'How' routine:
-# 1210 PRINT: PRINT "It has :"
-# 1220 FOR Q%=1 TO EVIDENCE%
-# 1230 PRINT Q$(COUNTER%,Q%);" of ";R$(COUNTER%,Q%)
-# 1240 NEXT Q%
-# 1250 RETURN
-
-
-def sub_1200():
-    """'How' routine"""
-    print()
-    print("It has :")
-    for Q_idx in range(1, EVIDENCE + 1):
-        print(Q_str[COUNTER, Q_idx], "of", R_str[COUNTER, Q_idx])
-
-
-# 1300 REM -- Re-initializing routine
-# 1310 FOR H%=1 TO HYPOTHESES%
-# 1320 FOR E%=1 TO EVIDENCE%
-# 1330 A$(H%,E%)="": NEXT E%
-# 1340 POSSIBLE%(H%)=1
-# 1350 NEXT H%
-# 1360 RETURN
-
-
-def sub_1300():
-    """Re-initializing routine"""
-    for H_idx in range(1, HYPOTHESES + 1):
-        for E_idx in range(1, EVIDENCE + 1):
-            A_str[H_idx, E_idx] = ""
-        POSSIBLE[H_idx] = 1
-
-
-# 1500 REM -- Comparison routine (process of elimination)
-# 1510 REM -- uses C$, vr, va
-# 1520 IF POSS% = 0 THEN RETURN : REM already ruled out
-# 1530 IF Q$(COUNTER%,I%) <> Q$(H%,E%) THEN RETURN : REM wrong question
-# 1540 IF A$(COUNTER%,I%)="*" THEN RETURN : REM user doesn't care
-# 1550 IF A$(COUNTER%,I%)=R$(H%,E%) THEN RETURN : REM exact match
-# 1560 C$=LEFT$(A$(COUNTER%,I%),1)
-# 1570 IF C$<>"<" AND C$<>">" THEN POSS%=0: RETURN : REM failed exact match
-# 1580 REM -- Now try range tests:
-# 1590 VR=VAL(R$(H%,E%)) : REM numeric value
-# 1600 VA=VAL(MID$(A$(COUNTER%,I%),2)) : REM numeric input
-# 1610 IF C$="<" AND VR < VA THEN RETURN
-# 1620 IF C$=">" AND VR > VA THEN RETURN
-# 1630 POSS%=0: REM failed all its chances!
-# 1640 RETURN
-# 1650 REM -- Allows user to say e.g. "<200" meaning under 200 etc.
-
-
-def sub_1500():
-    """Comparison routine (process of elimination)"""
-    global POSS
-    if POSS == 0:  # Already ruled out
-        return
-    if Q_str[COUNTER, I_idx] != Q_str[H_idx, E_idx]:  # Wrong question
-        return
-    if A_str[COUNTER, I_idx] == "*":  # User doesn't care
-        return
-    if A_str[COUNTER, I_idx] == R_str[H_idx, E_idx]:  # Exact match
-        return
-    C_str = A_str[COUNTER, I_idx][0]
-    if C_str != "<" and C_str != ">":
-        POSS = 0
-        return  # Failed exact match
-
-    ##### Now try range tests #####
-    VR = float(R_str[H_idx, E_idx])  # Numeric value
-    VA = float(A_str[COUNTER, I_idx][1:])  # Numeric input
-    if C_str == "<" and VR < VA:
-        return
-    if C_str == ">" and VR > VA:
-        return
-    POSS = 0  # Failed all its chances!
-    # Allows user to say e.g. "<200" meaning under 200 etc.
