@@ -27,3 +27,15 @@ EVIDENCE: int = 4  # The number of different items of evidence
 # 120 DIM Q$(HYPOTHESES%,EVIDENCE%) : REM name of question
 # 130 DIM R$(HYPOTHESES%,EVIDENCE%) : REM correct reply
 # 140 DIM N$(HYPOTHESES%) : REM name of hypothesis
+
+import numpy as np  # Imported for mapping BASIC arrays; TODO: Convert to more Pythonic data structures
+
+POSSIBLE: np.ndarray = np.ones(
+    HYPOTHESES, dtype=int
+)  # Set to 1 initially and 0 when hypothesis ruled out
+A_str: np.ndarray = np.empty(
+    (HYPOTHESES, EVIDENCE), dtype=str
+)  # Answer submitted by user
+Q_str: np.ndarray = np.empty((HYPOTHESES, EVIDENCE), dtype=str)  # Name of question
+R_str: np.ndarray = np.empty((HYPOTHESES, EVIDENCE), dtype=str)  # Correct reply
+N_str: np.ndarray = np.empty(HYPOTHESES, dtype=str)  # Name of hypothesis
