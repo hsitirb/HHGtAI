@@ -106,6 +106,11 @@ for COUNTER in range(1, HYPOTHESES + 1):
 # 390 IF Q$(Q%,E%)=Q$(COUNTER,I%) THEN A$(Q%,E%)=A$(COUNTER%,I%)
 # 400 NEXT E%: NEXT Q%
 
+##### Look for other questions this might also apply to #####
+for Q_idx in range(COUNTER + 1, HYPOTHESES + 1):
+    for E_idx in range(1, EVIDENCE + 1):
+        if Q_str[Q_idx, E_idx] == Q_str[COUNTER, I_idx]:
+            A_str[Q_idx, E_idx] = A_str[COUNTER, I_idx]
 
 # 410 REM -- Look for hypotheses that can be discounted due to this answer:
 # 420 FOR H%=1 TO HYPOTHESES%
